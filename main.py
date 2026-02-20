@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 
-uri = "mongodb+srv://maryshey1313:M130203masha@cluster0.rfwim81.mongodb.net/?appName=Cluster0"
+uri = "mongodb+srv://maryshey1313:password@cluster0.rfwim81.mongodb.net/?appName=Cluster0"
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
 # Send a ping to confirm a successful connection
