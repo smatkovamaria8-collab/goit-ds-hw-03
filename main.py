@@ -77,19 +77,23 @@ def update_some_cat(name, age):
         raise NotDigitalError
 
 #Функція для додавання нових особливостей до кота
+@catch_error
 def add_feature(name, *args):
     for arg in args:
         db.my_cats.update_one({"name": name}, {"$push": {"features": arg}})
     print_some_cat(name)
 
 #Функція для видалення конкретного кота із бази даних
+@catch_error
 def delete_one(name):
-    if print_some_cat(name):
+    result = db.my_cats.find_one({"name" : name})
+    if result is not None:
         db.my_cats.delete_one({"name": name})
     else:
-        print_some_cat
+        raise NotFoundDocument
 
 #Функція для видалення всіх документів
+@catch_error
 def delete_all():
     db.my_cats.delete_many({})
 
@@ -100,5 +104,6 @@ if __name__ == "__main__":
     update_some_cat("Grace", 3)
     add_feature("Вася", "ходить гулять", "муркає")
     delete_one("Мурчик")
+    print_results()
     delete_all()
     
