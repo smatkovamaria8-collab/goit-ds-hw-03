@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 
-uri = "mongodb+srv://maryshey1313:M130203masha@cluster0.rfwim81.mongodb.net/?appName=Cluster0"
+uri = "mongodb+srv://username:password@cluster0.rfwim81.mongodb.net/?appName=Cluster0"
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
 # Send a ping to confirm a successful connection
@@ -13,25 +13,27 @@ except Exception as e:
 
 db = client.book
 
-result_many = db.my_cats.insert_many(
-    [
-        {
-            "name" : "Grace",
-            "age" : 7,
-            "features" : ["муркає", "любить гратися"],
-        },
-        {
-            "name" : "Вася",
-            "age" : 5,
-            "features" : ["колобок", "любить поїсти"],
-        },
-        {
-            "name" : "Мурчик",
-            "age" : 10,
-            "features" : ["пухнастик", "любить спати"],
-        },
-    ]
-)
+def create_table():
+    result_many = db.my_cats.insert_many(
+        [
+            {
+                "name" : "Grace",
+                "age" : 7,
+                "features" : ["муркає", "любить гратися"],
+            },
+            {
+                "name" : "Вася",
+                "age" : 5,
+                "features" : ["колобок", "любить поїсти"],
+            },
+            {
+                "name" : "Мурчик",
+                "age" : 10,
+                "features" : ["пухнастик", "любить спати"],
+            },
+        ]
+    )
+    return result_many
 
 class NotFoundDocument(ValueError):
     pass
@@ -70,11 +72,13 @@ def print_some_cat(name):
 #Функція для оновлення віку для конкретного кота
 @catch_error
 def update_some_cat(name, age):
-    if age.isdigit():
+    try:
+        age = int(age)
         db.my_cats.update_one({"name" : name}, {"$set": {"age": age}})
         print_some_cat(name)
-    else:
+    except ValueError:
         raise NotDigitalError
+
 
 #Функція для додавання нових особливостей до кота
 @catch_error
@@ -99,9 +103,10 @@ def delete_all():
 
 
 if __name__ == "__main__":
+    create_table()
     print_results()
     print_some_cat("Grace")
-    update_some_cat("Grace", 3)
+    update_some_cat("Grace", 5)
     add_feature("Вася", "ходить гулять", "муркає")
     delete_one("Мурчик")
     print_results()
